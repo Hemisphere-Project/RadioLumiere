@@ -1,12 +1,22 @@
 #pragma once
 
+#define LB_ANIM_OFF		0
+#define LB_ANIM_RAMP	1
+#define LB_ANIM_SIN		2
+#define LB_ANIM_TRI		3
+#define LB_ANIM_STEP	4
+
+
 class LightBulb {
 
 	public:
-		void set(int value);
+		void setVal(int value);
+		void setAnim(int type, int period, int intensity);
+		void resetAnim();
+		void animate();
 		void draw();
 		LightBulb(int x, int y, int size);
-	
+
 	private:
 		int _x;
 		int _y;
@@ -17,6 +27,18 @@ class LightBulb {
 		int _rMax;
 		int _rMin;
 		int _rStep;
-		int _aFact100;
 		int _alpha;
+
+		int _anim_type;
+		int _anim_period;
+		int _anim_intensity;
+
+		int _cur_type;
+		int _cur_period;
+		int _cur_intensity;
+	  uint64_t _cur_offset;
+		float _cur_progress;
+
+		void setValUnscalled(float value);
+
 };

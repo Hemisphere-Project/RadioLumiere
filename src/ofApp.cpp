@@ -1,5 +1,5 @@
 #include "ofApp.h"
-	
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
@@ -7,12 +7,12 @@ void ofApp::setup(){
 
     //rpiLogo.loadImage("Raspi_Colour_R.png");
     alpha = 0;
-    
+
     touch.init(90);
     ofLog()<<touch.getName();
-    
+
     grid = new LightGrid(6,3);
-    
+
     // DMX
     dmx.setup("127.0.0.1", 3000);
     system("fuser -k 3000/udp; ~/HDmx/HDmx &");
@@ -25,19 +25,21 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+
     alpha += 3;
     alpha = alpha % 512;
-    
-    if (alpha < 256) grid->set(alpha);
-    else grid->set(511-alpha);
-    
+
+    grid->animate();
+
+    /*if (alpha < 256) grid->set(alpha);
+    else grid->set(511-alpha);*/
+
     /*ofxOscMessage m;
     m.setAddress("/dmx/set");
     m.addIntArg(1);
     m.addIntArg(5);
     dmx.sendMessage(m);*/
-    
+
 	/*int Tx=touch.getCoordTouch().x;
 	int Ty=touch.getCoordTouch().y;
 	int Tp=touch.getCoordTouch().z;
@@ -50,7 +52,7 @@ void ofApp::draw() {
 
     /*if (alpha < 256) ofSetColor(255,255,255, alpha);
     else ofSetColor(255,255,255, 511-alpha);
-    
+
     ofPushMatrix();
     ofTranslate(ofGetWidth()/2.0f,ofGetHeight()/2.0f);
     ofRotateZ(angle);
@@ -59,7 +61,7 @@ void ofApp::draw() {
     ofDisableAlphaBlending();
     ofPopMatrix();
 	*/
-	
+
 	grid->draw();
 
 	/*int maxRadius = 30;
@@ -71,8 +73,8 @@ void ofApp::draw() {
 		ofSetColor(255, a);
 		ofDrawCircle(150, 150, radius);
 	}*/
-	
-	
+
+
 }
 
 //--------------------------------------------------------------
