@@ -5,13 +5,16 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofBackground(0,0,0);
 
-    //rpiLogo.loadImage("Raspi_Colour_R.png");
-    alpha = 0;
-
+    // TOUCH SCREEN
     touch.init(90);
     ofLog()<<touch.getName();
 
+    // GRID
     grid = new LightGrid(6,3);
+    grid->modeJingle();
+
+    // OSC COM
+    com.setup(4000);
 
     // DMX
     dmx.setup("127.0.0.1", 3000);
@@ -26,9 +29,7 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
-    alpha += 3;
-    alpha = alpha % 512;
-
+    while(com.hasWaitingMessages()) process();
     grid->animate();
 
     /*if (alpha < 256) grid->set(alpha);
@@ -49,33 +50,37 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
-    /*if (alpha < 256) ofSetColor(255,255,255, alpha);
-    else ofSetColor(255,255,255, 511-alpha);
-
-    ofPushMatrix();
-    ofTranslate(ofGetWidth()/2.0f,ofGetHeight()/2.0f);
-    ofRotateZ(angle);
-    ofEnableAlphaBlending();
-    rpiLogo.draw(-rpiLogo.getWidth()/2.0f,-rpiLogo.getHeight()/2.0f);
-    ofDisableAlphaBlending();
-    ofPopMatrix();
-	*/
-
 	grid->draw();
+}
 
-	/*int maxRadius = 30;
-	int minRadius = 10;
-	int radiusStepSize = 5;
-	int a = alpha * radiusStepSize / (maxRadius-minRadius);  // Increase for a more opaque brush
-	// draw smaller and smaller circles and layering (increasing) opaqueness
-	for (int radius=maxRadius; radius>minRadius; radius-=radiusStepSize) {
-		ofSetColor(255, a);
-		ofDrawCircle(150, 150, radius);
-	}*/
+void ofApp::process() {
 
+	// get the next message
+	ofxOscMessage m;
+	com.getNextMessage(m);
+
+  // MODE 1
+	if(m.getAddress() == "/mode/jingle") grid->modeJingle();
+
+  // MODE 2
+	else if(m.getAddress() == "/mode/choeur") grid->modeChoeur();
+  
+  // MODE 3
+	else if(m.getAddress() == "/mode/paroles") {
+
+	}
+  // MODE 4
+	else if(m.getAddress() == "/mode/interactif") {
+
+	}
 
 }
+
+
+
+/*
+DEFAULTS OF STUFF
+*/
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){

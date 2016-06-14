@@ -13,8 +13,10 @@ LightBulb::LightBulb(int x, int y, int size) {
     _rMax = size/2;
     _rMin = _rMax/3;
     _rStep = max(1,(_rMax-_rMin)/6);
+
+    _continue = false;
     setVal(0);
-    setAnim(LB_ANIM_SIN, 1000, 255);
+    setAnim(LB_ANIM_OFF, 1000, 255, false);
     resetAnim();
 }
 
@@ -27,16 +29,27 @@ void LightBulb::setValUnscalled(float value) {
 	setVal( max(0, min(255, int(round(value*_cur_intensity)) )) );
 }
 
-void LightBulb::setAnim(int type, int period, int intensity) {
+void LightBulb::setAnim(int type) {
+  setAnim(type, _anim_period, _anim_intensity, _anim_continue);
+}
+
+void LightBulb::setAnim(int type, int period, int intensity, bool loop) {
   _anim_type = type;
   _anim_period = period;
   _anim_intensity = intensity;
+  _anim_continue = loop;
+  if (!isRunning()) resetAnim();
 }
+
+/*void LightBulb::setLoop(bool loop) {
+  _continue = loop;
+}*/
 
 void LightBulb::resetAnim(){
   _cur_type = _anim_type;
   _cur_period = _anim_period;
   _cur_intensity = _anim_intensity;
+  _continue = _anim_continue;
   _cur_offset = ofGetElapsedTimeMillis();
   _cur_progress = 0.0;
 }
@@ -44,8 +57,12 @@ void LightBulb::resetAnim(){
 void LightBulb::animate() {
   if (_cur_type == LB_ANIM_OFF) return;
 
-  _cur_progress = ((ofGetElapsedTimeMillis() - _cur_offset) % _cur_period) * 1.0 / _cur_period;
-  if (_cur_progress > 1.0) resetAnim();
+  // PROGRESS
+  _cur_progress = ((ofGetElapsedTimeMillis() - _cur_offset)) * 1.0 / _cur_period;
+  if (_cur_progress > 1.0) {
+    if (!_continue) setAnim(LB_ANIM_OFF);
+    resetAnim();
+  }
 
   // RAMP
   if (_cur_type == LB_ANIM_RAMP) setValUnscalled( _cur_progress );
@@ -64,6 +81,10 @@ void LightBulb::animate() {
     if (_cur_progress <= 0.5) setValUnscalled( 0.0 );
     else setValUnscalled( 1.0 );
   }
+}
+
+bool LightBulb::isRunning() {
+  return (_cur_type != LB_ANIM_OFF);
 }
 
 void LightBulb::draw() {

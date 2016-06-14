@@ -11,7 +11,10 @@ class LightBulb {
 
 	public:
 		void setVal(int value);
-		void setAnim(int type, int period, int intensity);
+		void setAnim(int type, int period, int intensity, bool loop);
+		void setAnim(int type);
+		//void setLoop(bool loop);
+		bool isRunning();
 		void resetAnim();
 		void animate();
 		void draw();
@@ -32,6 +35,7 @@ class LightBulb {
 		int _anim_type;
 		int _anim_period;
 		int _anim_intensity;
+		bool _anim_continue;
 
 		int _cur_type;
 		int _cur_period;
@@ -40,5 +44,7 @@ class LightBulb {
 		float _cur_progress;
 
 		void setValUnscalled(float value);
+
+		bool _continue;
 
 };

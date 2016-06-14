@@ -6,12 +6,13 @@
 #include "ofxOsc.h"
 
 class ofApp : public ofBaseApp {
-	
+
 public:
 	void setup();
+  void process();
 	void update();
 	void draw();
-	
+
 	void exit();
 
 	void keyPressed(int key);
@@ -22,16 +23,12 @@ public:
 	void mouseReleased(int x, int y, int button);
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);		
+	void gotMessage(ofMessage msg);
 
-	//ofImage rpiLogo;
-
-	int angle;
-	int alpha;
-	
 	TFTTouch touch;
-	
+
 	LightGrid *grid;
 	ofxOscSender dmx;
-	
+	ofxOscReceiver com;
+
 };
