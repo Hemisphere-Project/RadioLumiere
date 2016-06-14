@@ -7,6 +7,8 @@
 #define LG_MODE_PAROLES		3
 #define LG_MODE_INTERACT	4
 
+#define MAX_BANKS	16
+
 class LightGrid {
 
 	public:
@@ -18,12 +20,21 @@ class LightGrid {
 		void draw();
 
 		void stopAll();
+		//void modeJingle();
 		void modeJingle(int lowFreq, int highFreq, int lowIntens, int highIntens);
+
+		//void modeChoeur();
 		void modeChoeur(int rate, int intensity);
+
+		//void modeParoles();
+		void modeParoles(int rate, int intensity);
 
 		int getParam(int i);
 		void setParam(int i, int v);
-		void resetParams();
+
+		int getParam(int mode, int i);
+		void setParam(int mode, int i, int v);
+
 
 	private:
 		LightBulb* bulbs[16][16];
@@ -32,7 +43,11 @@ class LightGrid {
 		int _mode;
 		int _param[16][16];
 
+		bool _animTrig[MAX_BANKS][16][16];
+
 		int ran(int min, int max);
 
+		void resetTrigs();
+		void resetParams();
 
 };
