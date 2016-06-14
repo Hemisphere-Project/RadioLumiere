@@ -1,4 +1,5 @@
 #pragma once
+#include "ofxOsc.h"
 
 #define LB_ANIM_OFF		0
 #define LB_ANIM_RAMP	1
@@ -10,10 +11,10 @@
 class LightBulb {
 
 	public:
+		void setDmx(ofxOscSender& dmx, int dmxchannel);
 		void setVal(int value);
 		void setAnim(int type, int period, int intensity, bool loop);
 		void setAnim(int type);
-		//void setLoop(bool loop);
 		bool isRunning();
 		void resetAnim();
 		void animate();
@@ -31,6 +32,9 @@ class LightBulb {
 		int _rMin;
 		int _rStep;
 		int _alpha;
+
+		ofxOscSender _dmx;
+		int _chan;
 
 		int _anim_type;
 		int _anim_period;

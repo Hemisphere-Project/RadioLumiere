@@ -12,7 +12,7 @@ LightBulb::LightBulb(int x, int y, int size) {
     _centerY = y+size/2;
     _rMax = size/2;
     _rMin = _rMax/3;
-    _rStep = max(1,(_rMax-_rMin)/6);
+    _rStep = max(1,(_rMax-_rMin)/4);
 
     _continue = false;
     setVal(0);
@@ -20,9 +20,24 @@ LightBulb::LightBulb(int x, int y, int size) {
     resetAnim();
 }
 
+void LightBulb::setDmx(ofxOscSender& dmx, int dmxchannel) {
+  _dmx = dmx;
+  _chan = dmxchannel;
+  ofLog()<<"set channel: "<<dmxchannel;
+}
+
 void LightBulb::setVal(int value) {
 	_val = value;
 	_alpha = _val*4/(_rStep*3);
+
+  if (_chan ) {
+    ofxOscMessage m;
+    m.setAddress("/dmx/buffer");
+    m.addIntArg(_chan);
+    m.addIntArg(_val);
+    if (_chan == 1) ofLog()<<"set value: "<<_val;
+    _dmx.sendMessage(m);
+  }
 }
 
 void LightBulb::setValUnscalled(float value) {
@@ -41,10 +56,6 @@ void LightBulb::setAnim(int type, int period, int intensity, bool loop) {
   if (!isRunning()) resetAnim();
 }
 
-/*void LightBulb::setLoop(bool loop) {
-  _continue = loop;
-}*/
-
 void LightBulb::resetAnim(){
   _cur_type = _anim_type;
   _cur_period = _anim_period;
@@ -60,7 +71,7 @@ void LightBulb::animate() {
   // PROGRESS
   _cur_progress = ((ofGetElapsedTimeMillis() - _cur_offset)) * 1.0 / _cur_period;
   if (_cur_progress > 1.0) {
-    if (!_continue) setAnim(LB_ANIM_OFF);
+    if (!_continue) {setAnim(LB_ANIM_OFF); setVal(0);}
     resetAnim();
   }
 

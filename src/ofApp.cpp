@@ -4,6 +4,7 @@
 void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofBackground(0,0,0);
+    ofSetFrameRate(20);
 
     // TOUCH SCREEN
     touch.init(90);
@@ -11,7 +12,8 @@ void ofApp::setup(){
 
     // GRID
     grid = new LightGrid(6,3);
-    grid->modeJingle();
+    //grid->modeJingle(10, 2000, 30, 255);
+    grid->modeChoeur(1000, 255);
 
     // OSC COM
     com.setup(4000);
@@ -19,6 +21,7 @@ void ofApp::setup(){
     // DMX
     dmx.setup("127.0.0.1", 3000);
     system("fuser -k 3000/udp; ~/HDmx/HDmx &");
+    grid->setDmx(dmx);
 }
 
 //--------------------------------------------------------------
@@ -31,6 +34,11 @@ void ofApp::update(){
 
     while(com.hasWaitingMessages()) process();
     grid->animate();
+
+    // Render DMX
+    ofxOscMessage m;
+    m.setAddress("/dmx/render");
+    dmx.sendMessage(m);
 
     /*if (alpha < 256) grid->set(alpha);
     else grid->set(511-alpha);*/
@@ -59,12 +67,21 @@ void ofApp::process() {
 	ofxOscMessage m;
 	com.getNextMessage(m);
 
+  // MODE 0
+	if(m.getAddress() == "/mode/off") {
+    grid->stopAll();
+  }
+
   // MODE 1
-	if(m.getAddress() == "/mode/jingle") grid->modeJingle();
+	else if(m.getAddress() == "/mode/jingle") {
+    grid->modeJingle(10, 2000, 30, 255);
+  }
 
   // MODE 2
-	else if(m.getAddress() == "/mode/choeur") grid->modeChoeur();
-  
+	else if(m.getAddress() == "/mode/choeur") {
+    grid->modeChoeur(1000, 255);
+  }
+
   // MODE 3
 	else if(m.getAddress() == "/mode/paroles") {
 
