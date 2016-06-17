@@ -5,7 +5,7 @@
 #define LG_MODE_JINGLE		1
 #define LG_MODE_CHOEUR		2
 #define LG_MODE_PAROLES		3
-#define LG_MODE_INTERACT	4
+#define LG_MODE_MANU			4
 
 #define MAX_BANKS	16
 
@@ -19,15 +19,13 @@ class LightGrid {
 		void animate();
 		void draw();
 
+		int getMode();
 		void stopAll();
-		//void modeJingle();
-		void modeJingle(int lowFreq, int highFreq, int lowIntens, int highIntens);
-
-		//void modeChoeur();
-		void modeChoeur(int rate, int intensity);
-
-		//void modeParoles();
-		void modeParoles(int rate, int intensity);
+		void modeJingle();
+		void modeChoeur();
+		void modeParoles();
+		void modeManu();
+		void resetTrigs();
 
 		int getParam(int i);
 		void setParam(int i, int v);
@@ -47,7 +45,6 @@ class LightGrid {
 
 		int ran(int min, int max);
 
-		void resetTrigs();
 		void resetParams();
 
 };
