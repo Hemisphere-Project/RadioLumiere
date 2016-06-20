@@ -105,29 +105,32 @@ void LightGrid::animate() {
 	else if (_mode == LG_MODE_MANU) {
 		int modBright = getParam(1)*getParam(2)/100;
 
-		if (getParam(3) > 0 && getParam(10) > 0 && !bulbs[getParam(10)-1][(_nY-1)]->isRunning()) {
-			for (int y=0; y<_nY; y++)
-			if (y>=(_nY-getParam(3))) {
-				bulbs[getParam(10)-1][y]->setAnim(LB_ANIM_TRI, getParam(0), modBright, false);
-				bulbs[getParam(10)-1][y]->resetAnim();
-				bulbs[getParam(10)+2][y]->setAnim(LB_ANIM_TRI, getParam(0), modBright, false);
-				bulbs[getParam(10)+2][y]->resetAnim();
-				if (getParam(11) > 0) {
-					bulbs[getParam(11)-1][y]->setAnim(LB_ANIM_TRI, getParam(0), modBright, false);
-					bulbs[getParam(11)-1][y]->resetAnim();
-					bulbs[getParam(11)+2][y]->setAnim(LB_ANIM_TRI, getParam(0), modBright, false);
-					bulbs[getParam(11)+2][y]->resetAnim();
-				}
-			}
-		}
+		// Interval
+		int x1 = getParam(10);
+		int x2;
+		if (getParam(11) > 0) x2 = getParam(11);
+		else x2 = x1;
+		int ANIM = LB_ANIM_OFF;
+		bool restart = (x1 > 0 && !bulbs[x1-1][(_nY-1)]->isRunning());
 
 		for (int x=0; x<_nX; x++)
-			if (getParam(10) == 0 || (x+1 != getParam(10) && x-2 != getParam(10)))
-				if (getParam(11) == 0 || (x+1 != getParam(11) && x-2 != getParam(11)))
-					for (int y=0; y<_nY; y++)
-							bulbs[x][y]->setAnim(LB_ANIM_SIN,
-																ran(getParam(LG_MODE_JINGLE,0), getParam(LG_MODE_JINGLE,1)),
-																ran(getParam(LG_MODE_JINGLE,2), modBright/3), false);
+			if (x1 > 0 && x >= (x1-1) && x<x2) {
+				if (restart)
+					for (int y=0; y<_nY; y++) {
+						if (y>=(_nY-getParam(3))) ANIM = LB_ANIM_TRI;
+						else ANIM = LB_ANIM_OFF;
+						
+						bulbs[x][y]->setAnim(ANIM, getParam(0), modBright, false);
+						bulbs[x][y]->resetAnim();
+						bulbs[x+3][y]->setAnim(ANIM, getParam(0), modBright, false);
+						bulbs[x+3][y]->resetAnim();
+					}
+			}
+			else
+				for (int y=0; y<_nY; y++)
+					bulbs[x][y]->setAnim(LB_ANIM_SIN,
+											ran(getParam(LG_MODE_JINGLE,0), getParam(LG_MODE_JINGLE,1)),
+											ran(getParam(LG_MODE_JINGLE,2), modBright/3), false);
 
 	}
 
