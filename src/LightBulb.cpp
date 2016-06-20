@@ -35,7 +35,7 @@ void LightBulb::setVal(int value) {
     m.setAddress("/dmx/buffer");
     m.addIntArg(_chan);
     m.addIntArg(_val);
-    if (_chan == 1) ofLog()<<"set value: "<<_val;
+    //if (_chan == 1) ofLog()<<"set value: "<<_val;
     _dmx.sendMessage(m);
   }
 }
@@ -63,6 +63,7 @@ void LightBulb::resetAnim(){
   _continue = _anim_continue;
   _cur_offset = ofGetElapsedTimeMillis();
   _cur_progress = 0.0;
+  if (_cur_type == LB_ANIM_OFF) setVal(0);
 }
 
 void LightBulb::animate() {

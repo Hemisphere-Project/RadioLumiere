@@ -113,13 +113,13 @@ void LightGrid::animate() {
 		int ANIM = LB_ANIM_OFF;
 		bool restart = (x1 > 0 && !bulbs[x1-1][(_nY-1)]->isRunning());
 
-		for (int x=0; x<_nX; x++)
+		for (int x=0; x<(_nX/2); x++)
 			if (x1 > 0 && x >= (x1-1) && x<x2) {
 				if (restart)
 					for (int y=0; y<_nY; y++) {
 						if (y>=(_nY-getParam(3))) ANIM = LB_ANIM_TRI;
 						else ANIM = LB_ANIM_OFF;
-						
+
 						bulbs[x][y]->setAnim(ANIM, getParam(0), modBright, false);
 						bulbs[x][y]->resetAnim();
 						bulbs[x+3][y]->setAnim(ANIM, getParam(0), modBright, false);
@@ -127,10 +127,15 @@ void LightGrid::animate() {
 					}
 			}
 			else
-				for (int y=0; y<_nY; y++)
+				for (int y=0; y<_nY; y++) {
 					bulbs[x][y]->setAnim(LB_ANIM_SIN,
 											ran(getParam(LG_MODE_JINGLE,0), getParam(LG_MODE_JINGLE,1)),
 											ran(getParam(LG_MODE_JINGLE,2), modBright/3), false);
+					bulbs[x+3][y]->setAnim(LB_ANIM_SIN,
+											ran(getParam(LG_MODE_JINGLE,0), getParam(LG_MODE_JINGLE,1)),
+											ran(getParam(LG_MODE_JINGLE,2), modBright/3), false);
+				}
+
 
 	}
 
