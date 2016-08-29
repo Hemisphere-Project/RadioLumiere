@@ -96,7 +96,7 @@ void ofApp::process() {
   // MODE CHOEUR
   else if(m.getAddress() == "/mode/choeur") {
     if (m.getNumArgs() >= 1) grid->setParam(LG_MODE_CHOEUR, 2, m.getArgAsInt32(0));
-    grid->modeChoeur();  
+    grid->modeChoeur();
   }
 
   // PARAMS CHOEUR
@@ -134,17 +134,37 @@ void ofApp::process() {
   else if(m.getAddress() == "/params/manu/intensity")
     {if (m.getNumArgs() >= 1) grid->setParam(LG_MODE_MANU, 1, m.getArgAsInt32(0));}
 
-  else if(m.getAddress() == "/manu/dim")
-    {if (m.getNumArgs() >= 1) grid->setParam(LG_MODE_MANU, 2, m.getArgAsInt32(0));}
+  else if(m.getAddress() == "/manu/depth")
+    {if (m.getNumArgs() >= 1) {
+        grid->setParam(LG_MODE_MANU, 2, m.getArgAsInt32(0));
+        //ofLog()<<"/manu/depth "<< m.getArgAsInt32(0);
+      }
+    }
 
   else if(m.getAddress() == "/manu/height")
-    {if (m.getNumArgs() >= 1) grid->setParam(LG_MODE_MANU, 3, m.getArgAsInt32(0));}
+    {if (m.getNumArgs() >= 1) {
+        grid->setParam(LG_MODE_MANU, 3, m.getArgAsInt32(0));
+        //ofLog()<<"/manu/height "<< m.getArgAsInt32(0);
+      }
+    }
 
   else if(m.getAddress() == "/manu/select") {
-    if (m.getNumArgs() >= 1) grid->setParam(LG_MODE_MANU, 10, m.getArgAsInt32(0));
-    else grid->setParam(LG_MODE_MANU, 10, 0);
-    if (m.getNumArgs() >= 2) grid->setParam(LG_MODE_MANU, 11, m.getArgAsInt32(1));
-    else grid->setParam(LG_MODE_MANU, 11, 0);
+    if (m.getNumArgs() >= 1) {
+      grid->setParam(LG_MODE_MANU, 10, m.getArgAsInt32(0));
+      //ofLog()<<"/manu/select1 "<< m.getArgAsInt32(0);
+    }
+    else {
+      grid->setParam(LG_MODE_MANU, 10, 0);
+      //ofLog()<<"/manu/select1 OFF";
+    }
+    if (m.getNumArgs() >= 2) {
+      grid->setParam(LG_MODE_MANU, 11, m.getArgAsInt32(1));
+      //ofLog()<<"/manu/select2 "<< m.getArgAsInt32(1);
+    }
+    else {
+      grid->setParam(LG_MODE_MANU, 11, 0);
+      //ofLog()<<"/manu/select2 OFF";
+    }
   }
 
 

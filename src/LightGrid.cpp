@@ -15,20 +15,20 @@ LightGrid::LightGrid(int nX, int nY) {
 	setParam(LG_MODE_JINGLE, 0, 50);		// flick rate min
 	setParam(LG_MODE_JINGLE, 1, 1000);	// flick rate max
 	setParam(LG_MODE_JINGLE, 2, 10);		// intens min
-	setParam(LG_MODE_JINGLE, 3, 255);		// intens max
+	setParam(LG_MODE_JINGLE, 3, 200);		// intens max
 
 	// Default CHOEUR params
-	setParam(LG_MODE_CHOEUR, 1, 600);	// flick rate
-	setParam(LG_MODE_CHOEUR, 2, 255);	// intens max
+	setParam(LG_MODE_CHOEUR, 1, 100);	// flick rate
+	setParam(LG_MODE_CHOEUR, 2, 200);	// intens max
 
 	// Default CHOEUR params
-	setParam(LG_MODE_PAROLES, 1, 300);	// flick rate
-	setParam(LG_MODE_PAROLES, 2, 255);	// intens max
+	setParam(LG_MODE_PAROLES, 1, 200);	// flick rate
+	setParam(LG_MODE_PAROLES, 2, 200);	// intens max
 
 	// Default MANU params
-	setParam(LG_MODE_MANU, 0, 300); 	// flick rate
-	setParam(LG_MODE_MANU, 1, 255);		// intens max
-	setParam(LG_MODE_MANU, 2, 100);		// intens %
+	setParam(LG_MODE_MANU, 0, 350); 	// flick rate
+	setParam(LG_MODE_MANU, 1, 200);		// intens max
+	setParam(LG_MODE_MANU, 2, 0);		// random rate %
 	setParam(LG_MODE_MANU, 3, 3);			// height
 
 	int size = min( (ofGetWidth()/_nX), (ofGetHeight()/_nY) );
@@ -93,7 +93,7 @@ void LightGrid::animate() {
 					break;
 				}
 		if (!isRunning) {
-			setParam(0, (getParam(0) + 1)%12);
+			setParam(0, (getParam(0) + 1)%14);
 			for (int x=0; x<_nX; x++)
 				for (int y=0; y<_nY; y++)
 					if (_animTrig[getParam(0)][x][y]) bulbs[x][y]->setAnim(LB_ANIM_TRI, getParam(1), getParam(2), false);
@@ -103,7 +103,8 @@ void LightGrid::animate() {
 
 	// MODE MANU
 	else if (_mode == LG_MODE_MANU) {
-		int modBright = getParam(1)*getParam(2)/100;
+		//int modBright = getParam(1)*getParam(2)/100;
+		int modBright = getParam(1);
 
 		// Interval
 		int x1 = getParam(10);
@@ -112,6 +113,8 @@ void LightGrid::animate() {
 		else x2 = x1;
 		int ANIM = LB_ANIM_OFF;
 		bool restart = (x1 > 0 && !bulbs[x1-1][(_nY-1)]->isRunning());
+		bool isSLave = false;
+		int modRate = 0;
 
 		for (int x=0; x<(_nX/2); x++)
 			if (x1 > 0 && x >= (x1-1) && x<x2) {
@@ -120,9 +123,12 @@ void LightGrid::animate() {
 						if (y>=(_nY-getParam(3))) ANIM = LB_ANIM_TRI;
 						else ANIM = LB_ANIM_OFF;
 
-						bulbs[x][y]->setAnim(ANIM, getParam(0), modBright, false);
+					//isSLave = (x == (x1-1)) && (y == (_nY-1));
+						modRate = getParam(0)+ran(-300,300)*getParam(2)/100;
+
+						bulbs[x][y]->setAnim(ANIM, modRate, modBright, isSLave);
 						bulbs[x][y]->resetAnim();
-						bulbs[x+3][y]->setAnim(ANIM, getParam(0), modBright, false);
+						bulbs[x+3][y]->setAnim(ANIM, modRate, modBright, isSLave);
 						bulbs[x+3][y]->resetAnim();
 					}
 			}
@@ -239,12 +245,16 @@ void LightGrid::modeParoles() {
 	_animTrig[4][4][1] = true;
 	_animTrig[5][5][0] = true;
 
-	_animTrig[6][0][2] = true;
-	_animTrig[7][1][1] = true;
-	_animTrig[8][2][0] = true;
+	_animTrig[6][5][1] = true;
+
+	_animTrig[7][5][2] = true;
+	_animTrig[8][4][1] = true;
 	_animTrig[9][3][0] = true;
-	_animTrig[10][4][1] = true;
-	_animTrig[11][5][2] = true;
+	_animTrig[10][2][0] = true;
+	_animTrig[11][1][1] = true;
+	_animTrig[12][0][2] = true;
+
+	_animTrig[13][0][1] = true;
 
 	setParam(0, 0);
 }
